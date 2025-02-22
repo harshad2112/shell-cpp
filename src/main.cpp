@@ -6,6 +6,8 @@ int main() {
   // Flush after every std::cout / std:cerr
     std::cout << std::unitbuf;
     std::cerr << std::unitbuf;
+    
+    std::vector<std::string> supportedCommands = {"type", "echo", "exit"};
 
     while(true)
     {
@@ -40,6 +42,29 @@ int main() {
             }
             if(args.size())
                 std::cout<<'\n';
+        }
+        else if(command == "type")
+        {
+            for(auto arg: args)
+            {
+                bool shellCommand = false;
+                for(auto supCommand: supportedCommands)
+                {
+                    if(supCommand == arg)
+                    {
+                        shellCommand = true;
+                        break;
+                    }
+                }
+                if(shellCommand)
+                {
+                    std::cout<<arg<<" is a shell builtin\n";
+                }
+                else
+                {
+                    std::cout<<arg<<": not found\n";   
+                }
+            }
         }
         else 
         {
