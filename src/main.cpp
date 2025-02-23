@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
 #include <string>
 #include <vector>
 
@@ -90,6 +91,10 @@ int main() {
                     }
                 }
             }
+        }
+        else if(!getPath(command).empty())
+        {
+            std::system(input.c_str());
         }
         else 
         {
