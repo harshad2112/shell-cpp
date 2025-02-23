@@ -25,7 +25,7 @@ int main() {
     std::cout << std::unitbuf;
     std::cerr << std::unitbuf;
     
-    std::vector<std::string> supportedCommands = {"type", "echo", "exit"};
+    std::vector<std::string> supportedCommands = {"type", "echo", "exit", "pwd"};
 
     while(true)
     {
