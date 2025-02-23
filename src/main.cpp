@@ -92,6 +92,11 @@ int main() {
                 }
             }
         }
+        else if(command == "pwd")
+        {
+            std::string pwd = std::filesystem::current_path().string(); 
+            std::cout<<pwd<<'\n';
+        }
         else if(!getPath(command).empty())
         {
             std::system(input.c_str());
