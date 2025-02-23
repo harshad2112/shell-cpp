@@ -101,9 +101,9 @@ int main() {
         {
             if(args.size()==0 or args[0] == "~")
             {
-                std::string currentUser = std::getenv("USER");
+                std::string home = std::getenv("HOME");
                 args.resize(0);
-                args.push_back("/home/" + currentUser);
+                args.push_back(home);
             }
             if(args.size()!=1)
             {
