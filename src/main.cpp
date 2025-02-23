@@ -20,6 +20,27 @@ std::string getPath(std::string command)
     return "";
 }
 
+std::vector<std::string> parseCommand(std::istringstream &input)
+{
+    std::vector<std::string> tokens;
+    while(input >> std::ws)
+    {
+        std::string token;
+        char firstChar = input.peek();
+        if(firstChar == '\'' or firstChar == '"')
+        {
+            char quote = input.get();
+            std::getline(input, token, quote);
+        }
+        else
+        {
+            input >> token;
+        }
+        tokens.push_back(token);
+    }
+    return tokens;
+}
+
 int main() {
   // Flush after every std::cout / std:cerr
     std::cout << std::unitbuf;
@@ -34,20 +55,9 @@ int main() {
         std::string input;
         std::getline(std::cin, input);
         std::string command;
-        std::vector<std::string> args;
-        int start = 0, end = 0;
-        while((end = input.find(' ', start)) != std::string::npos)
-        {
-            if(command == "")
-                command = input.substr(start, end - start);
-            else
-                 args.push_back(input.substr(start, end - start));
-            start = end + 1;
-        }
-        if(command == "")
-            command = input.substr(start);
-        else
-            args.push_back(input.substr(start));
+        std::istringstream stream(input);
+        std::getline(stream, command, ' ');
+        std::vector<std::string> args = parseCommand(stream);
         if(command == "exit")
         {
             return std::stoi(args[0]);
