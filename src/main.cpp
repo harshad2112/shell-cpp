@@ -25,7 +25,7 @@ int main() {
     std::cout << std::unitbuf;
     std::cerr << std::unitbuf;
     
-    std::vector<std::string> supportedCommands = {"type", "echo", "exit", "pwd"};
+    std::vector<std::string> supportedCommands = {"type", "echo", "exit", "pwd", "cd"};
 
     while(true)
     {
@@ -96,6 +96,25 @@ int main() {
         {
             std::string pwd = std::filesystem::current_path().string(); 
             std::cout<<pwd<<'\n';
+        }
+        else if(command == "cd")
+        {
+            if(args.size()==0)
+            {
+                args.push_back("$");
+            }
+            if(args.size()!=1)
+            {
+                std::cerr<<"cd: too many arguments\n";
+                continue;
+            }
+            std::filesystem::path newPath = args[0];
+            if(!std::filesystem::exists(newPath))
+            {
+                std::cerr<<"cd: "<<args[0]<<": No such file or directory\n";
+                continue;
+            }
+            std::filesystem::current_path(newPath);
         }
         else if(!getPath(command).empty())
         {
