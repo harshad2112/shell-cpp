@@ -23,20 +23,32 @@ std::string getPath(std::string command)
 std::vector<std::string> parseCommand(std::istringstream &input)
 {
     std::vector<std::string> tokens;
+    char prevChar = '\0';
     while(input >> std::ws)
     {
         std::string token;
-        char firstChar = input.peek();
+        char firstChar = input.peek(); 
         if(firstChar == '\'' or firstChar == '"')
         {
             char quote = input.get();
             std::getline(input, token, quote);
+            if(prevChar == '\'' or prevChar == '"')
+            {
+                tokens[tokens.size()-1] += token;
+            }
+            else
+            {
+                tokens.push_back(token);
+            }
         }
         else
         {
             input >> token;
+            tokens.push_back(token);
         }
-        tokens.push_back(token);
+        prevChar = firstChar;
+        if(input.peek() == ' ')
+            prevChar = ' ';
     }
     return tokens;
 }
