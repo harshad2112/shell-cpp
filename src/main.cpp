@@ -1,6 +1,23 @@
+#include <filesystem>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
+
+std::string getPath(std::string command)
+{
+    std::string pathEnv = std::getenv("PATH");
+
+    std::stringstream ss(pathEnv);
+    std::string path;
+    while(!ss.eof())
+    {
+        getline(ss, path, ':');
+        if(std::filesystem::exists(path + "/" + command))
+            return path + "/" + command;
+    }
+    return "";
+}
 
 int main() {
   // Flush after every std::cout / std:cerr
@@ -61,8 +78,16 @@ int main() {
                     std::cout<<arg<<" is a shell builtin\n";
                 }
                 else
-                {
-                    std::cout<<arg<<": not found\n";   
+                {   
+                    std::string path = getPath(arg);
+                    if(!path.empty())
+                    {
+                        std::cout<<arg<<" is "<<path<<'\n';
+                    }
+                    else
+                    {
+                        std::cout<<arg<<": not found\n";   
+                    }
                 }
             }
         }
