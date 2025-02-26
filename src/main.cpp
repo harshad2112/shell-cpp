@@ -66,11 +66,11 @@ std::vector<std::string> parseCommand(const std::string &input) {
             // Handle escape sequences for both quoted & unquoted cases
             char next = input[i + 1];
 
-            if (next == '"' || next == '\'' || next == '\\' || next == ' ') {
-                token += next; // Add escaped character
-                ++i; // Skip the next character
+            if (inQuotes) {
+                token += ch; // Add escaped character
             } else {
-                token += ch; // Keep the backslash if not escaping a special char
+                token += next; // Keep the backslash if not escaping a special char
+                i++;
             }
         } else if (inQuotes) {
             // Inside quotes, only close on matching quote
