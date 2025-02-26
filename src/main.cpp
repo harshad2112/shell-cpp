@@ -57,34 +57,37 @@ std::vector<std::string> parseCommand(const std::string &input) {
     std::vector<std::string> tokens;
     std::string token;
     bool inQuotes = false;
-    char quoteType = '\0';  // Store whether we are inside ' or "
+    char quoteType = '\0';  // Track whether we're inside ' or "
 
     for (size_t i = 0; i < input.length(); ++i) {
         char ch = input[i];
 
-        if (inQuotes) {
-            if (ch == '\\' && i + 1 < input.length()) {
-                // Handle escape sequences inside quotes
-                char next = input[i + 1];
-                if (next == '"' || next == '\'' || next == '\\') {
-                    token += next; // Add escaped character
-                    ++i; // Skip the next character
-                } else {
-                    token += ch; // Keep the backslash if it's not escaping a quote or itself
-                }
-            } else if (ch == quoteType) {
-                inQuotes = false; // Close the quoted string
+        if (ch == '\\' && i + 1 < input.length()) {
+            // Handle escape sequences for both quoted & unquoted cases
+            char next = input[i + 1];
+
+            if (next == '"' || next == '\'' || next == '\\' || next == ' ') {
+                token += next; // Add escaped character
+                ++i; // Skip the next character
             } else {
-                token += ch; // Normal character inside quotes
+                token += ch; // Keep the backslash if not escaping a special char
+            }
+        } else if (inQuotes) {
+            // Inside quotes, only close on matching quote
+            if (ch == quoteType) {
+                inQuotes = false;
+            } else {
+                token += ch;
             }
         } else {
+            // Outside quotes, handle spaces as token separators
             if (ch == '"' || ch == '\'') {
                 inQuotes = true;
-                quoteType = ch; // Track which quote was opened
+                quoteType = ch;
                 token.clear();
             } else if (ch == ' ') {
                 if (!token.empty()) {
-                    tokens.push_back(token); // Store complete token
+                    tokens.push_back(token);
                     token.clear();
                 }
             } else {
@@ -94,11 +97,58 @@ std::vector<std::string> parseCommand(const std::string &input) {
     }
 
     if (!token.empty()) {
-        tokens.push_back(token); // Push the last token
+        tokens.push_back(token);
     }
 
     return tokens;
 }
+
+//std::vector<std::string> parseCommand(const std::string &input) {
+//    std::vector<std::string> tokens;
+//    std::string token;
+//    bool inQuotes = false;
+//    char quoteType = '\0';  // Store whether we are inside ' or "
+//
+//    for (size_t i = 0; i < input.length(); ++i) {
+//        char ch = input[i];
+//
+//        if (inQuotes) {
+//            if (ch == '\\' && i + 1 < input.length()) {
+//                // Handle escape sequences inside quotes
+//                char next = input[i + 1];
+//                if (next == '"' || next == '\'' || next == '\\') {
+//                    token += next; // Add escaped character
+//                    ++i; // Skip the next character
+//                } else {
+//                    token += ch; // Keep the backslash if it's not escaping a quote or itself
+//                }
+//            } else if (ch == quoteType) {
+//                inQuotes = false; // Close the quoted string
+//            } else {
+//                token += ch; // Normal character inside quotes
+//            }
+//        } else {
+//            if (ch == '"' || ch == '\'') {
+//                inQuotes = true;
+//                quoteType = ch; // Track which quote was opened
+//                token.clear();
+//            } else if (ch == ' ') {
+//                if (!token.empty()) {
+//                    tokens.push_back(token); // Store complete token
+//                    token.clear();
+//                }
+//            } else {
+//                token += ch;
+//            }
+//        }
+//    }
+//
+//    if (!token.empty()) {
+//        tokens.push_back(token); // Push the last token
+//    }
+//
+//    return tokens;
+//}
 
 int main() {
   // Flush after every std::cout / std:cerr
