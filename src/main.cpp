@@ -84,7 +84,6 @@ std::vector<std::string> parseCommand(const std::string &input) {
             if (ch == '"' || ch == '\'') {
                 inQuotes = true;
                 quoteType = ch;
-                token.clear();
             } else if (ch == ' ') {
                 if (!token.empty()) {
                     tokens.push_back(token);
